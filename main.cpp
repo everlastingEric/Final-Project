@@ -43,17 +43,17 @@ class BST {
 
         void preorder() {
             if (tree.size() == 0) return;
-            stack<node> nodes;
-            nodes.push(tree[0]);
+            stack<int> nodes;
+            nodes.push(0);
             while (!nodes.empty()) {
-                node curr = nodes.top();
+                int curr = nodes.top();
                 nodes.pop();
-                cout << curr.val << " ";
-                if (curr.right != -1) {
-                    nodes.push(tree[curr.right]);
+                cout << tree[curr].val << " ";
+                if (tree[curr].right != -1) {
+                    nodes.push(tree[curr].right);
                 }
-                if (curr.left != -1) {
-                    nodes.push(tree[curr.left]);
+                if (tree[curr].left != -1) {
+                    nodes.push(tree[curr].left);
                 }
             }
             cout << endl;
