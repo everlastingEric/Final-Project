@@ -56,6 +56,7 @@ class BST {
                     nodes.push(tree[curr.left]);
                 }
             }
+            cout << endl;
         }
 
         int size() {
