@@ -17,6 +17,10 @@ struct node {
 
 class BST {
     public:
+        BST(int capacity) {
+            tree.reserve(capacity);
+        }
+
         void insert(int n) {
             tree.push_back(node(n));
             if (tree.size() == 1) {
@@ -67,10 +71,10 @@ class BST {
 };
 
 int main() {
-    BST t;
-
     int size;
     cin >> size;
+
+    BST t(size);
 
     for (int i = 0; i < size; i++) {
         int n;
