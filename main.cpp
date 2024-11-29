@@ -81,7 +81,6 @@ class AVL {
 
             while (idx != -1) {
                 int balance = getHeight(tree[idx].left) - getHeight(tree[idx].right);
-                
                 if(balance > 1 && n > tree[tree[idx].left].val) {
                     rotateLeft(tree[idx].left);
                     rotateRight(idx);
@@ -133,7 +132,7 @@ class AVL {
 	    int size;
 	    int capacity;
         int getHeight(int idx) {
-            if (idx <= -1 || idx >= size) return 0;
+            if (idx <= -1) return 0;
             return tree[idx].height;
         }
 
@@ -146,7 +145,12 @@ class AVL {
                 rootIdx = leftChild;
             }
             else {
-                tree[subParent].left = leftChild;
+                if (tree[subParent].left == idx) {
+                    tree[subParent].left = leftChild;
+                }
+                else {
+                    tree[subParent].right = leftChild;
+                }
             }
             tree[leftChild].parent = subParent;
 
@@ -171,7 +175,12 @@ class AVL {
                 rootIdx = rightChild;
             }
             else {
-                tree[subParent].right = rightChild;
+                if (tree[subParent].left == idx) {
+                    tree[subParent].left = rightChild;
+                }
+                else {
+                    tree[subParent].right = rightChild;
+                }
             }
             tree[rightChild].parent = subParent;
 
