@@ -1,4 +1,4 @@
-#include <vector>
+#include <unordered_map>
 #include <stack>
 #include <iostream>
 
@@ -13,40 +13,61 @@ struct node {
         left = -1;
         right = -1;
     }
+
+    node() {}
 };
+
+struct range {
+    int lBound;
+    int rBound;
+    range (int l, int r) {
+        lBound = l;
+        rBound = r;
+    }
+};
+
+
 
 class BST {
     public:
-        BST(int capacity) {
-            tree.reserve(capacity);
+        BST(int capacity, int root) {
+            tree = new node[capacity];
+	        tree[0] = node(root);
+            leafs.insert({0, range(-2147483648, 2147483647)});
+	        size = 1;
+        }
+
+        ~BST() {
+            delete[] tree;
         }
 
         void insert(int n) {
-            tree.push_back(node(n));
-            if (tree.size() == 1) {
-                return;
-            }
-            int idx = 0;
-            while (true) {
-                if (n > tree[idx].val) {
-                    if (tree[idx].right == -1) {
-                        tree[idx].right = tree.size() - 1;
-                        return;
+            tree[size] = node(n);
+            for (auto itr = leafs.begin(); itr != leafs.end(); itr++) {
+                if (n < tree[itr->first].val && n > itr->second.lBound) {
+                    tree[itr->first].left = size;
+                    leafs.insert({size, range(itr->second.lBound, tree[itr->first].val)});
+                    itr->second.lBound = tree[itr->first].val;
+                    if (itr->second.lBound == itr->second.rBound) {
+                        leafs.erase(itr);
                     }
-                    idx = tree[idx].right;
+                    break;
                 }
-                else {
-                    if (tree[idx].left == -1) {
-                        tree[idx].left = tree.size() - 1;
-                        return;
+                else if (n > tree[itr->first].val && n < itr->second.rBound) {
+                    tree[itr->first].right = size;
+                    leafs.insert({size, range(tree[itr->first].val, itr->second.rBound)});
+                    itr->second.rBound = tree[itr->first].val;
+                    if (itr->second.lBound == itr->second.rBound) {
+                        leafs.erase(itr);
                     }
-                    idx = tree[idx].left;
+                    break;
                 }
             }
+            size++; 
         }
 
         void preorder() {
-            if (tree.size() == 0) return;
+            if (size == 0) return;
             stack<int> nodes;
             nodes.push(0);
             while (!nodes.empty()) {
@@ -63,20 +84,23 @@ class BST {
             cout << endl;
         }
 
-        int size() {
-            return tree.size();
-        }
     private:
-        vector<node> tree;
+        node* tree;
+        unordered_map<int, range> leafs;
+	    int root;
+	    int size;
+	    int capacity;
 };
 
 int main() {
     int size;
     cin >> size;
+    int root;
+    cin >> root;
 
-    BST t(size);
+    BST t(size, root);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size - 1; i++) {
         int n;
         cin >> n;
         t.insert(n);
