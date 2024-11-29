@@ -81,8 +81,6 @@ int main() {
         cin >> n;
         t.insert(n);
     }
-
-    cout << t.size() << endl;
     t.preorder();
 }
 
